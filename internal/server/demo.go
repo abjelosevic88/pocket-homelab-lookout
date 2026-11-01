@@ -313,8 +313,9 @@ func tsStates() []demoState {
 	return out
 }
 
-// demoShot draws a simple page picture; later states move the "news" box
-// and repaint the price so the visual compare has something to show.
+// demoShot draws a simple shop page: picture, title, price and a button. A
+// later state lowers the price (red, with a sale badge) so the picture
+// compare has something to show near the top.
 func demoShot(id int64, state int) []byte {
 	img := image.NewRGBA(image.Rect(0, 0, 1280, 1400))
 	draw.Draw(img, img.Bounds(), &image.Uniform{color.RGBA{248, 249, 251, 255}}, image.Point{}, draw.Src)
@@ -323,24 +324,39 @@ func demoShot(id int64, state int) []byte {
 	}
 	fill(0, 0, 1280, 72, color.RGBA{14, 116, 144, 255})
 	fill(40, 22, 180, 28, color.RGBA{255, 255, 255, 255})
-	for i := 0; i < 14; i++ {
+	for i := 0; i < 4; i++ {
+		fill(760+i*120, 28, 90, 16, color.RGBA{165, 243, 252, 255})
+	}
+	// the product picture
+	fill(80, 120, 480, 440, color.RGBA{229, 231, 235, 255})
+	for r := 0; r < 120; r++ {
+		for c := -r; c <= r; c++ {
+			if r*r+c*c <= 120*120 {
+				img.Set(320+c, 340-120+r*2, color.RGBA{203, 213, 225, 255})
+			}
+		}
+	}
+	// title, two lines
+	fill(620, 130, 520, 34, color.RGBA{30, 41, 59, 255})
+	fill(620, 180, 360, 34, color.RGBA{30, 41, 59, 255})
+	fill(620, 240, 300, 16, color.RGBA{203, 213, 225, 255})
+	// the price
+	if state%2 == 1 || state >= 2 {
+		fill(620, 290, 210, 56, color.RGBA{220, 38, 38, 255})
+		fill(850, 300, 150, 36, color.RGBA{22, 163, 74, 255})
+		fill(620, 360, 160, 14, color.RGBA{148, 163, 184, 255})
+	} else {
+		fill(620, 290, 250, 56, color.RGBA{30, 41, 59, 255})
+	}
+	fill(620, 400, 260, 52, color.RGBA{14, 116, 144, 255})
+	fill(620, 480, 420, 14, color.RGBA{203, 213, 225, 255})
+	fill(620, 506, 380, 14, color.RGBA{203, 213, 225, 255})
+	for i := 0; i < 12; i++ {
 		w := 700 + (i*97)%420
-		fill(80, 140+i*42, w, 14, color.RGBA{214, 218, 224, 255})
+		fill(80, 640+i*42, w, 14, color.RGBA{214, 218, 224, 255})
 	}
-	box := color.RGBA{230, 236, 242, 255}
-	if state%2 == 1 {
-		box = color.RGBA{255, 228, 214, 255}
-	}
-	fill(80, 780, 520, 180, box)
-	fill(110, 820, 300+state*40, 36, color.RGBA{60, 64, 72, 255})
-	if state > 0 {
-		fill(700, 780, 500, 120, color.RGBA{209, 250, 229, 255})
-		fill(730, 815, 220+state*30, 24, color.RGBA{6, 95, 70, 255})
-	}
-	for i := 0; i < 6; i++ {
-		fill(80, 1020+i*40, 1000-(i*53)%300, 12, color.RGBA{214, 218, 224, 255})
-	}
+	_ = id
 	var b bytes.Buffer
-	_ = jpeg.Encode(&b, img, &jpeg.Options{Quality: 70})
+	_ = jpeg.Encode(&b, img, &jpeg.Options{Quality: 75})
 	return b.Bytes()
 }
