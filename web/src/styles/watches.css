@@ -1,0 +1,119 @@
+/* ==========================================================================
+   Pocket Lookout — the watch list and one watch's page
+   ========================================================================== */
+
+/* ---------- the list ---------- */
+.wl-stats { margin-bottom: 18px; }
+.wl-bad { color: var(--danger); }
+.wl-tags { margin: -2px 0 14px; }
+.wl-empty-text { max-width: 520px; margin: 4px auto 14px; line-height: 1.55; }
+.wl-empty-actions { justify-content: center; flex-wrap: wrap; }
+
+.wl-bulk { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 8px 10px; margin-bottom: 10px; border-radius: 10px; background: var(--surface-2); }
+
+.wl-list { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+.wl-row {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) 150px auto; gap: 12px; align-items: center;
+  padding: 11px 10px 11px 14px; border-top: 1px solid var(--hairline); cursor: pointer; min-height: 70px;
+}
+.wl-row:first-child { border-top: 0; }
+.wl-row:has(.wl-pick) { grid-template-columns: auto auto minmax(0, 1fr) 150px auto; }
+.wl-row:hover { background: var(--hover); }
+.wl-row:focus-visible { outline: 2px solid var(--accent-ring); outline-offset: -2px; }
+.wl-row.picked { background: var(--accent-soft); }
+.wl-row.paused .site-ico { opacity: .45; }
+.wl-row.paused .wl-name { color: var(--muted); }
+.wl-pick { margin: 0; }
+.wl-main { min-width: 0; display: grid; gap: 2px; }
+.wl-name { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 14px; font-weight: 550; }
+.wl-row.unseen .wl-name { font-weight: 700; }
+.wl-line { font-size: 13px; color: var(--text-2); }
+.wl-meta { font-size: 12px; color: var(--faint); }
+.wl-side { display: grid; justify-items: end; gap: 4px; min-width: 0; }
+.wl-when { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.wl-tagline { font-size: 11.5px; color: var(--faint); max-width: 100%; }
+.wl-more { display: flex; }
+@media (max-width: 767px) {
+  .wl-row { grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; padding: 10px 6px 10px 12px; }
+  .wl-row:has(.wl-pick) { grid-template-columns: auto auto minmax(0, 1fr) auto; }
+  .wl-side { display: none; }
+  .wl-meta { display: none; }
+  .wl-bulk .btn { flex: 1 1 auto; }
+}
+
+/* ---------- one watch ---------- */
+.wp-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: start; margin-bottom: 16px; }
+.wp-title { min-width: 0; display: grid; gap: 3px; }
+.wp-title h1 { font-size: 22px; letter-spacing: -.02em; line-height: 1.25; overflow-wrap: anywhere; }
+.wp-url { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; color: var(--muted); max-width: 100%; }
+.wp-url:hover { color: var(--accent-ink); }
+.wp-url .icon { flex-shrink: 0; }
+.wp-status { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; font-size: 13px; color: var(--text-2); margin-top: 2px; }
+.wp-sep { color: var(--faint); }
+.wp-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 4px; }
+.wp-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.wp-tabs { margin: 4px 0 14px; border-bottom: 1px solid var(--hairline); padding-bottom: 8px; }
+.wp-switch { gap: 8px; cursor: pointer; }
+@media (max-width: 767px) {
+  .wp-head { grid-template-columns: auto minmax(0, 1fr); gap: 12px; }
+  .wp-title h1 { font-size: 19px; }
+  .wp-actions { grid-column: 1 / -1; justify-content: stretch; }
+  .wp-actions > .btn:not(.icon-only) { flex: 1 1 auto; justify-content: center; }
+}
+
+/* changes of one watch */
+.wp-changes { list-style: none; margin: 0; padding: 0; }
+.wp-change { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-top: 1px solid var(--hairline); cursor: pointer; }
+.wp-change:first-child { border-top: 0; }
+.wp-change:hover { background: var(--hover); }
+.wp-change:focus-visible { outline: 2px solid var(--accent-ring); outline-offset: -2px; }
+.wp-cdot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: transparent; }
+.wp-change.unseen .wp-cdot { background: var(--accent); }
+.wp-change.unseen .wp-csum { font-weight: 650; }
+.wp-csum { font-size: 14px; line-height: 1.4; overflow-wrap: anywhere; }
+.wp-creason { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.wp-cmeta { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--faint); margin-top: 3px; }
+.wp-change.nocount .wp-csum { color: var(--muted); }
+.wp-change.nocount .counts { opacity: .55; }
+.wp-change.dismissed .wp-csum { color: var(--muted); }
+.wp-more { display: flex; justify-content: center; padding: 10px 0 14px; border-top: 1px solid var(--hairline); }
+@media (max-width: 767px) { .wp-change { padding: 11px 14px; gap: 10px; } }
+
+/* now */
+.wp-text { max-height: 70vh; overflow: auto; padding: 12px 14px; background: var(--surface-2); border-radius: 10px; }
+.wp-shot { display: block; max-width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--border); }
+
+/* checks */
+.wp-chart-wrap { padding: 4px 18px 10px; }
+.wp-chart { display: block; width: 100%; height: 56px; }
+.wp-chart .bar { fill: var(--accent); opacity: .55; }
+.wp-chart .bar.changed { opacity: 1; }
+.wp-chart .bar.fail { fill: var(--danger); opacity: .8; }
+.wp-table-wrap { overflow-x: auto; }
+.wp-checks td { white-space: nowrap; }
+.wp-checks td:nth-child(2) { max-width: 320px; }
+.wp-res { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; }
+.wp-res.ok { color: var(--muted); }
+.wp-res.changed { color: var(--accent-ink); font-weight: 600; }
+.wp-res.bad { color: var(--danger); }
+.wp-res .icon { flex-shrink: 0; }
+@media (max-width: 767px) {
+  .wp-hide-sm { display: none; }
+  .wp-checks td:nth-child(2) { max-width: 180px; }
+  .wp-chart-wrap { padding: 4px 14px 10px; }
+}
+
+/* about */
+.wp-kv { gap: 9px 18px; }
+@media (max-width: 520px) {
+  .wp-kv { grid-template-columns: 1fr; gap: 2px; }
+  .wp-kv dd { margin-bottom: 8px; }
+}
+/* phones: the four numbers in one compact row */
+@media (max-width: 767px) {
+  .wl-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-bottom: 12px; }
+  .wl-stats .stat { padding: 8px 6px; border-radius: 10px; text-align: center; justify-items: center; }
+  .wl-stats .stat > .icon { display: none; }
+  .wl-stats .stat .n { font-size: 18px; }
+  .wl-stats .stat .l { font-size: 10.5px; line-height: 1.2; }
+}

@@ -1,0 +1,97 @@
+/* ==========================================================================
+   Pocket Lookout — watching a page: the steps, the picker, the form
+   ========================================================================== */
+
+.wf-page { max-width: 860px; margin: 0 auto; }
+.wf-card { margin-bottom: 14px; }
+.wf-card .card-head h2 { font-size: 15px; }
+
+/* step indicator */
+.wf-steps { list-style: none; margin: 0 0 14px; padding: 0; display: flex; gap: 6px; }
+.wf-steps li { flex: 1; min-width: 0; }
+.wf-step { width: 100%; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; text-align: left; }
+.wf-step:disabled { cursor: default; opacity: .6; }
+.wf-step:not(:disabled):hover { border-color: var(--border-strong); }
+.wf-step.active { border-color: var(--accent); color: var(--text); box-shadow: 0 0 0 3px var(--accent-soft); }
+.wf-step.done { color: var(--text-2); }
+.wf-step-n { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center; font-size: 12px; background: var(--surface-3); color: var(--text-2); }
+.wf-step.active .wf-step-n { background: var(--accent); color: #fff; }
+.wf-step.done .wf-step-n { background: var(--success); color: #fff; }
+.wf-step-l { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* step 1: the address and what was found */
+.url-row { display: flex; gap: 8px; align-items: stretch; }
+.url-row input { flex: 1; min-width: 0; }
+.url-row .btn { flex-shrink: 0; }
+.wf-result { border: 1px solid var(--border); border-radius: 12px; padding: 12px; background: var(--surface-2); }
+.wf-result-title { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wf-facts { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-top: 6px; }
+.wf-shot { margin-top: 10px; max-height: 340px; overflow: hidden; border-radius: 8px; border: 1px solid var(--border); background: #fff; }
+.wf-shot img { display: block; width: 100%; height: auto; }
+
+/* step 2: choices */
+.wf-what { display: grid; gap: 14px; }
+.choice-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; }
+.choice { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; text-align: left; cursor: pointer; transition: border-color .12s, box-shadow .12s; }
+.choice:not(:disabled):hover { border-color: var(--border-strong); }
+.choice:disabled { opacity: .55; cursor: not-allowed; }
+.choice.on { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.choice-ico { width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0; display: grid; place-items: center; background: var(--surface-2); color: var(--muted); }
+.choice.on .choice-ico { background: var(--accent-soft); color: var(--accent-ink); }
+.choice-title { display: block; font-weight: 600; font-size: 14px; }
+.choice-sub { display: block; font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.choice-radio { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--border-strong); flex-shrink: 0; }
+.choice.on .choice-radio { border-color: var(--accent); background: radial-gradient(circle, var(--accent) 0 4px, transparent 5px); }
+.wf-sample { max-height: 280px; overflow: auto; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--border); font-size: 12.5px; }
+.mono-input { font-family: var(--mono); font-size: 13px; }
+
+/* the picker */
+.picker { display: grid; gap: 10px; }
+.picker-search { position: relative; display: flex; align-items: center; }
+.picker-search > .icon { position: absolute; left: 11px; color: var(--faint); pointer-events: none; }
+.picker-search input { padding-left: 34px; padding-right: 34px; height: 40px; }
+.picker-search .spinner { position: absolute; right: 12px; }
+.block-list { display: grid; gap: 6px; max-height: 460px; overflow-y: auto; overscroll-behavior: contain; padding: 2px; }
+.block-card { display: grid; gap: 4px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; text-align: left; cursor: pointer; min-height: 48px; }
+.block-card:hover { border-color: var(--border-strong); }
+.block-card.found { background: var(--accent-soft); }
+.block-card.on { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+.block-head { display: flex; align-items: center; gap: 6px; }
+.block-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--accent-ink); }
+.block-check { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--border-strong); display: grid; place-items: center; color: #fff; flex-shrink: 0; }
+.block-card.on .block-check { background: var(--accent); border-color: var(--accent); }
+.block-text { font-size: 13px; color: var(--text-2); white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.wf-toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: 0; padding: 6px 0; font: inherit; font-size: 13px; font-weight: 600; color: var(--text-2); cursor: pointer; justify-self: start; }
+.wf-toggle:hover { color: var(--text); }
+.wf-advanced { display: grid; gap: 12px; padding: 12px; border-radius: 10px; background: var(--surface-2); }
+.wf-extract { display: grid; gap: 8px; padding-top: 12px; border-top: 1px solid var(--hairline); }
+.wf-extract-head { display: flex; align-items: center; gap: 8px; font-size: 13.5px; min-height: 28px; }
+
+/* step 3: when to tell */
+.wf-fields { display: grid; gap: 16px; }
+.wf-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+.wf-tag-chips { margin-top: 6px; }
+.wf-try { display: grid; gap: 8px; margin-top: 4px; justify-items: start; }
+.wf-try .callout { width: 100%; }
+.wf-more { margin-top: 14px; border-top: 1px solid var(--hairline); padding-top: 8px; }
+.wf-more-body { display: grid; gap: 16px; padding-top: 8px; }
+.wf-row { display: flex; align-items: center; gap: 14px; }
+.wf-row-title { font-size: 13.5px; font-weight: 600; }
+.wf-num { width: 90px !important; }
+.wf-sel { display: block; margin-top: 4px; font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.wf-reset { margin-bottom: 14px; }
+
+/* the buttons at the bottom: stay in reach on a phone */
+.wf-actions { display: flex; align-items: center; gap: 8px; padding: 12px 0; }
+@media (max-width: 767px) {
+  .wf-steps { gap: 4px; }
+  .wf-step { justify-content: center; padding: 0 6px; }
+  .wf-step:not(.active) .wf-step-l { display: none; }
+  .wf-two { grid-template-columns: minmax(0, 1fr); }
+  .url-row { flex-direction: column; }
+  .url-row .btn { height: 42px; justify-content: center; }
+  .choice-grid { grid-template-columns: minmax(0, 1fr); }
+  .wf-actions { position: sticky; bottom: 0; z-index: 5; margin: 0 -14px; padding: 10px 14px calc(10px + env(safe-area-inset-bottom)); background: var(--bg); border-top: 1px solid var(--hairline); }
+  .wf-actions .btn { height: 42px; }
+  .wf-row { align-items: flex-start; flex-wrap: wrap; }
+}

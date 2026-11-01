@@ -1,0 +1,6 @@
+# Pocket Lookout behind Caddy. /s/<token> (shared lists) and /api/v1/s/*
+# work without a login; /api/* is reachable for phone shortcuts and the
+# Homepage widget — they send their own bearer token.
+lookout.example.com {
+	reverse_proxy pocket-lookout:8080
+}

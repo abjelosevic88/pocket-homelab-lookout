@@ -1,0 +1,23 @@
+[Unit]
+Description=Pocket Lookout — watch web pages for changes
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=pocket-lookout
+Group=pocket-lookout
+ExecStart=/usr/local/bin/pocket-lookout
+Environment=DATA_DIR=/var/lib/pocket-lookout
+Environment=PORT=8080
+Environment=BASE_URL=https://lookout.example.com
+Environment=SECURE_COOKIES=true
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/pocket-lookout
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
