@@ -9,7 +9,7 @@ import { Icon } from '../components/icons'
 import { announceChange, useCrumb, useOnChange } from '../components/Layout'
 import { Card, Confirm, Empty, Loading, MenuButton, Segmented, Spinner, Switch, Tabs, copyText, errMsg, useToast } from '../components/ui'
 import type { MenuItem } from '../components/ui'
-import { Counts, FETCH_LABEL, NOTIFY_LABEL, NOTIFY_ON_LABEL, SiteIcon, StatusDot, Summary, checkLine, stateText, watchState } from '../components/watch'
+import { Counts, FETCH_LABEL, NOTIFY_LABEL, NOTIFY_ON_LABEL, SiteIcon, SourceBadge, StatusDot, Summary, checkLine, stateText, watchState } from '../components/watch'
 
 type Tab = 'changes' | 'now' | 'checks' | 'about'
 const TABS: { id: Tab; label: string; icon: string }[] = [
@@ -112,7 +112,7 @@ export default function WatchPage() {
       <header className="wp-head">
         <SiteIcon host={w.host} size="lg" />
         <div className="wp-title">
-          <h1>{w.name}</h1>
+          <h1>{w.name} <SourceBadge source={w.source} /></h1>
           <a className="wp-url ellipsis" href={w.url} target="_blank" rel="noreferrer noopener" title={w.url}>{w.url.replace(/^https?:\/\//, '')}<Icon name="external" size={12} /></a>
           <div className="wp-status">
             <StatusDot w={w} /><span>{stateText(w)}</span>

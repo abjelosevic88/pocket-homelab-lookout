@@ -39,6 +39,6 @@ RSS without login: `GET /feed/<secret>.xml` (all changes that counted) and `/fee
 Lookout offers two scopes to other Pocket apps (switched on per app and person in Pocket Core → Links):
 
 - `watches:read` — `GET /watches`, `/watches/{id}`, `/watches/{id}/changes|checks|snapshot`, `/changes`, `/changes/{id}`, `/dashboard`, `/tags`, `/day/{date}`
-- `watches:write` — `POST /watches`, `POST /preview`, `PUT|DELETE /watches/{id}`, `POST /watches/{id}/check|pause|resume`; a linked app may change only the watches it added (`source` = its slug)
+- `watches:write` — `POST /watches`, `POST /preview`, `PUT|DELETE /watches/{id}`, `POST /watches/{id}/check|pause|resume`; a linked app may change only the watches it added (`source` = its slug). Changes on such watches are recorded as already seen: the app that started the watch tells the person itself (Pocket Wishlist reads `@price` watches and sends its own price alerts)
 
 Events on the Core bus: `lookout.changed` (`watch_id`, `change_id`, `title`, `url`, `tags`, `summary`, `added`, `removed`, `added_lines`, `removed_lines`, `reason`, `link`), `lookout.failing` (`watch_id`, `title`, `url`, `error`, `failed_checks`), `lookout.watch_added`. Pocket Flows can start a flow on any of them.

@@ -105,3 +105,10 @@ export function AIStatusLine({ st }: { st: AIStatus | null }) {
 export const FETCH_LABEL: Record<string, string> = { auto: 'Automatic', fast: 'Fast (no JavaScript)', browser: 'Browser (JavaScript)' }
 export const NOTIFY_LABEL: Record<string, string> = { now: 'Right away', digest: 'In the daily summary', off: 'Never (just keep the history)' }
 export const NOTIFY_ON_LABEL: Record<string, string> = { any: 'Any change', added: 'Only when something is added', removed: 'Only when something goes away' }
+
+/** "Pocket Wishlist": a watch another Pocket app started (it may change or delete it). */
+export function SourceBadge({ source }: { source: string }) {
+  if (!source) return null
+  const name = 'Pocket ' + source.charAt(0).toUpperCase() + source.slice(1)
+  return <span className="badge cat" title={`Started by ${name}, which reads it and tells you itself; it may change or delete this watch`}>{name}</span>
+}

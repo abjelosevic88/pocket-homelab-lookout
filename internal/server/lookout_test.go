@@ -479,3 +479,27 @@ func TestDemoData(t *testing.T) {
 		t.Fatalf("demo data leaked to Bob: %d", n)
 	}
 }
+
+// A watch another Pocket app started (Wishlist reading a price) keeps its
+// changes, but they do not wait in Lookout as new: that app tells the person.
+func TestAppWatchChangesAreNotNew(t *testing.T) {
+	a := newApp(t, nil)
+	a.site.set("/p", htmlPage(`<p>Price: 10</p>`))
+	w := &store.Watch{URL: a.site.url("/p"), FetchMode: store.FetchFast, NotifyMode: store.NotifyOff, IntervalMinutes: 60, Source: "wishlist", Paused: true}
+	w.Normalize(5)
+	if err := a.st.CreateWatch(context.Background(), a.ids["Alice"], w); err != nil {
+		t.Fatal(err)
+	}
+	a.check(a.alice, w.ID)
+	a.site.set("/p", htmlPage(`<p>Price: 8</p>`))
+	if out := a.check(a.alice, w.ID); out["changed"] != true {
+		t.Fatalf("no change: %v", out)
+	}
+	got := a.ok(a.alice, "GET", fmt.Sprintf("/api/v1/watches/%d", w.ID), nil)
+	if num(got, "unseen") != 0 || num(got, "changes") != 1 {
+		t.Fatalf("app watch: unseen %v changes %v", got["unseen"], got["changes"])
+	}
+	if n := len(a.list(a.alice, "/api/v1/changes?unseen=1")); n != 0 {
+		t.Fatalf("%d new changes", n)
+	}
+}

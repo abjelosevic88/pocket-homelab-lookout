@@ -65,7 +65,7 @@ or `docker compose up -d` with [docker-compose.yml](docker-compose.yml), which a
 
 ## With Pocket Core
 
-Set `CORE_URL` and `CORE_REGISTRATION_KEY` and Lookout joins the box: people sign in with Pocket Core, Pocket AI writes the summaries and judges conditions with nothing to paste, and every change that counts is published as `lookout.changed` — Pocket Flows can turn it into a task, a calendar entry or anything else. Other Pocket apps can read watches and changes (`watches:read`, e.g. Pocket Day) or start watching pages (`watches:write`). Without Core everything works with your own OpenAI key; the Core-only choices stay visible, greyed out.
+Set `CORE_URL` and `CORE_REGISTRATION_KEY` and Lookout joins the box: people sign in with Pocket Core, Pocket AI writes the summaries and judges conditions with nothing to paste, and every change that counts is published as `lookout.changed` — Pocket Flows can turn it into a task, a calendar entry or anything else. Other Pocket apps can read watches and changes (`watches:read`, e.g. Pocket Day) or start watching pages (`watches:write`) — Pocket Wishlist hands Lookout the shops that refuse its price checks, and reads the price back from the browser. Watches another app started carry its badge, and their changes are that app's to tell you about. Without Core everything works with your own OpenAI key; the Core-only choices stay visible, greyed out.
 
 ## Develop
 

@@ -523,15 +523,18 @@ func (s *Store) RecordCheck(ctx context.Context, w *Watch, r CheckRecord, onChan
 			b, _ := json.Marshal(c.Visual)
 			visual = string(b)
 		}
+		// a watch another Pocket app started is that app's business: its
+		// changes are kept but not waiting here as new
+		c.Seen = w.Source != ""
 		res, err := tx.ExecContext(ctx, `INSERT INTO changes (user_id, watch_id, at, before_id, after_id, added, removed, diff, summary, summary_by,
-			matched, reason, notified, visual) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`, c.UserID, c.WatchID, at, nullI(c.BeforeID), nullI(c.AfterID),
-			c.Added, c.Removed, string(diff), c.Summary, c.SummaryBy, boolInt(c.Matched), c.Reason, c.Notified, visual)
+			matched, reason, notified, visual, seen) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`, c.UserID, c.WatchID, at, nullI(c.BeforeID), nullI(c.AfterID),
+			c.Added, c.Removed, string(diff), c.Summary, c.SummaryBy, boolInt(c.Matched), c.Reason, c.Notified, visual, boolInt(c.Seen))
 		if err != nil {
 			return nil, err
 		}
 		c.ID, _ = res.LastInsertId()
 		if c.Matched {
-			if _, err := tx.ExecContext(ctx, `UPDATE watches SET unseen = unseen + 1, last_changed_at = ? WHERE id = ?`, at, w.ID); err != nil {
+			if _, err := tx.ExecContext(ctx, `UPDATE watches SET unseen = unseen + ?, last_changed_at = ? WHERE id = ?`, boolInt(!c.Seen), at, w.ID); err != nil {
 				return nil, err
 			}
 		}

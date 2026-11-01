@@ -8,7 +8,7 @@ import { Icon } from '../components/icons'
 import { announceChange, useOnChange, useShell } from '../components/Layout'
 import { Confirm, Empty, Loading, MenuButton, Modal, PageHeader, Segmented, Spinner, errMsg, useDebounce, useIsMobile, useToast } from '../components/ui'
 import type { MenuItem } from '../components/ui'
-import { SiteIcon, StatusDot, checkLine, stateText, watchState } from '../components/watch'
+import { SiteIcon, SourceBadge, StatusDot, checkLine, stateText, watchState } from '../components/watch'
 
 type StateFilter = '' | 'changed' | 'failing' | 'paused'
 
@@ -226,6 +226,7 @@ function WatchRow({ w, selecting, picked, onPick, onOpen, menu }: { w: Watch; se
         <div className="wl-name">
           <span className="ellipsis">{w.name}</span>
           {w.unseen > 0 && <span className="badge accent" title={stateText(w)}>{w.unseen}</span>}
+          <SourceBadge source={w.source} />
         </div>
         <div className={`wl-line ellipsis ${st === 'error' ? 'wl-bad' : ''}`}>{line}</div>
         <div className="wl-meta ellipsis">{w.host} · {checkLine(w)}</div>
