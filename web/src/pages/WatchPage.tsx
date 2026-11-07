@@ -274,16 +274,33 @@ function ChecksTab({ w, rev }: { w: Watch; rev: number }) {
 function TimingChart({ checks }: { checks: Check[] }) {
   const pts = [...checks].reverse().slice(-60)
   const maxMS = Math.max(1, ...pts.filter(c => c.ok).map(c => c.ms))
-  const W = 600, H = 56, gap = 2
+  const [ref, W] = useWidth(600)
+  const H = 56, gap = 2
   const bw = Math.max(2, (W - gap * (pts.length - 1)) / Math.max(pts.length, 1))
   return (
-    <svg className="wp-chart" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" role="img" aria-label={`Response times of the last ${pts.length} checks`}>
+    <svg ref={ref} className="wp-chart" viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img" aria-label={`Response times of the last ${pts.length} checks`}>
       {pts.map((c, i) => {
         const h = c.ok ? Math.max(3, (c.ms / maxMS) * (H - 4)) : H
         return <rect key={c.id} x={i * (bw + gap)} y={H - h} width={bw} height={h} rx={1.5} className={c.ok ? (c.changed ? 'bar changed' : 'bar') : 'bar fail'}><title>{`${fmtDateTime(c.at)} · ${c.ok ? `${c.ms} ms` : c.error || 'failed'}`}</title></rect>
       })}
     </svg>
   )
+}
+
+/** The element's real width, so a chart draws 1:1 and its text, dots and corners keep their shape. */
+function useWidth(fallback: number) {
+  const [w, setW] = useState(fallback)
+  const ro = useRef<ResizeObserver | null>(null)
+  const ref = useCallback((el: Element | null) => {
+    ro.current?.disconnect()
+    ro.current = null
+    if (!el) return
+    const measure = () => { const cw = Math.round(el.getBoundingClientRect().width); if (cw > 0) setW(cw) }
+    measure()
+    ro.current = new ResizeObserver(measure)
+    ro.current.observe(el)
+  }, [])
+  return [ref, w] as const
 }
 
 // ---------- about ----------
