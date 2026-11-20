@@ -22,6 +22,18 @@ var linkOffers = []core.Offer{
 	{Scope: "watches:write", Name: "Watch pages for you", Description: "Start watching a page for you (e.g. from an automation or a chat), and change, check or delete only the watches that app added itself."},
 }
 
+// portable is what Pocket Move may copy out and bring in for a person
+// (docs/move.md in pocket-homelab-core); Register adds move:export/import.
+var portable = &core.Portable{
+	Exports: []core.PortableExport{
+		{Path: "/api/v1/export.json", File: "lookout.json", Kind: core.KindPocket, Title: "The pages you watch with their settings, and the changes found on them"},
+	},
+	Imports: []core.PortableImport{
+		{Path: "/api/v1/import", Kind: core.KindPocket, ContentType: "application/json", Title: "Watches the pages from another box; pages you already watch are skipped"},
+		{Path: "/api/v1/import", Kind: "changedetection-backup", ContentType: "application/zip", Title: "Watches the pages from a changedetection.io backup; pages you already watch are skipped"},
+	},
+}
+
 type linkRoute struct {
 	methods string
 	path    *regexp.Regexp
@@ -44,6 +56,9 @@ var errLinkScope = errors.New("outside the link's scope")
 
 // linkAllows reports whether a link token with these scopes may make this request.
 func linkAllows(scopes []string, r *http.Request) bool {
+	if portable.LinkAllows(scopes, r) {
+		return true
+	}
 	for _, lr := range linkRoutes {
 		if !strings.Contains(" "+lr.methods+" ", " "+r.Method+" ") || !lr.path.MatchString(r.URL.Path) {
 			continue

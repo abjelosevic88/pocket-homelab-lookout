@@ -231,6 +231,7 @@ func (s *Server) registerWithCore(ctx context.Context) error {
 		Publishes: eventTopics,
 		Offers:    linkOffers,
 		Uses:      []core.Use{core.InferenceUse()},
+		Portable:  portable,
 	}
 	if s.cfg.BaseURL != "" {
 		// ask Core for a relying-party client so "Sign in with Pocket Core" needs no configuration
