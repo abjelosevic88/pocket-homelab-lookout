@@ -574,12 +574,20 @@ func TestPocketLinkTokens(t *testing.T) {
 	if d := a.ok("pcx_bob_day", "GET", "/api/v1/pocket/day/"+day, nil); len(items(t, d)) != 0 {
 		t.Fatalf("bob's day through the link: %v", d)
 	}
-	// only the one allowed capture landed, as a watch the sending app started; a retry adds nothing
+	// only the one allowed capture landed, as the person's own watch (not one the sending app reads for them); a retry adds nothing
 	code, again, _ := a.call("pcx_alice_capture", "POST", "/api/v1/pocket/capture", line("req-0000000000000001"))
 	if code != 201 {
 		t.Fatalf("retry through the link: %d %v", code, again)
 	}
-	ws := a.list(a.alice, "/api/v1/watches?source=hub")
+	if n := len(a.list(a.alice, "/api/v1/watches?source=hub")); n != 0 {
+		t.Fatalf("a captured watch must not be marked as started by an app: %d", n)
+	}
+	var ws []any
+	for _, w := range a.list(a.alice, "/api/v1/watches") {
+		if w.(map[string]any)["title"] == "Linked" {
+			ws = append(ws, w)
+		}
+	}
 	if len(ws) != 1 || len(a.list(a.alice, "/api/v1/watches")) != 2 || len(a.list(a.bob, "/api/v1/watches")) != 0 {
 		t.Fatalf("watches the link added: %v", ws)
 	}

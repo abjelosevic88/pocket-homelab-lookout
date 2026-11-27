@@ -237,7 +237,8 @@ func (s *Server) pocketCapture(r *http.Request, in core.CaptureInput) (*core.Cap
 	st, _ := s.store.GetSettings(ctx, uid)
 	wa := s.newWatch(st)
 	wa.URL, wa.Title, wa.Notes = addr, title, notes
-	wa.Source = linkApp(ctx)
+	// The person typed this line themselves; the app that passed it on (Pocket Hub) does not read the
+	// watch for them. So the watch is their own: an app-started one would have its changes filed as seen.
 	wa.Normalize(s.minInterval())
 	if msg := validateWatch(wa); msg != "" {
 		return nil, fmt.Errorf("%w: %s", core.ErrCapture, msg)
