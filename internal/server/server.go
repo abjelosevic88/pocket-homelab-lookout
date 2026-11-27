@@ -226,12 +226,12 @@ func (s *Server) registerWithCore(ctx context.Context) error {
 	m := core.Manifest{
 		Slug: "lookout", Name: "Pocket Lookout",
 		Description: "Watches web pages for changes: a whole page, one part of it, a price or a JSON API. Dates, counters and ads are ignored, every change gets a one-line summary, AI conditions say when it matters, and changes reach you as pushes, a daily summary, an RSS feed or events for Pocket Flows.",
-		Icon:        "/favicon.svg", Version: Version,
+		Icon:        "/favicon.svg", Version: Version, Category: "Tools",
 		URL: s.cfg.CoreAppURL, PublicURL: s.cfg.BaseURL, HealthPath: "/healthz", EnvPrefix: "LOOKOUT",
 		Publishes: eventTopics,
 		Offers:    linkOffers,
 		Uses:      []core.Use{core.InferenceUse()},
-		Portable:  portable,
+		Portable:  portable, Capabilities: capabilities,
 	}
 	if s.cfg.BaseURL != "" {
 		// ask Core for a relying-party client so "Sign in with Pocket Core" needs no configuration

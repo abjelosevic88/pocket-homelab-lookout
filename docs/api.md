@@ -36,10 +36,21 @@ RSS without login: `GET /feed/<secret>.xml` (all changes that counted) and `/fee
 
 ## Pocket Core links
 
-Lookout offers two scopes to other Pocket apps (switched on per app and person in Pocket Core → Links):
+Lookout offers these scopes to other Pocket apps (switched on per app and person in Pocket Core → Links):
 
 - `watches:read` — `GET /watches`, `/watches/{id}`, `/watches/{id}/changes|checks|snapshot`, `/changes`, `/changes/{id}`, `/dashboard`, `/tags`, `/day/{date}`
 - `watches:write` — `POST /watches`, `POST /preview`, `PUT|DELETE /watches/{id}`, `POST /watches/{id}/check|pause|resume`; a linked app may change only the watches it added (`source` = its slug). Changes on such watches are recorded as already seen: the app that started the watch tells the person itself (Pocket Wishlist reads `@price` watches and sends its own price alerts)
 - `move:export` / `move:import` — Pocket Move can copy your watches out (`GET /export.json`) and bring watches in (`POST /import`); `GET /pocket/portable` describes both. Imports only add: pages you already watch are skipped
+
+### What Pocket Search, Day and Hub ask
+
+Lookout also answers the four routes every Pocket app can offer (the capability contract, `docs/capabilities.md` in Pocket Core). Each has its own scope, which opens that one route and nothing else; `watches:read` and `watches:write` do not open them. A signed-in person can call them too.
+
+| Route | Scope | Answers |
+|---|---|---|
+| `GET /pocket/search?q=&limit=` | `pocket:search` | The person's watches whose name, page title, address, tags, notes or last change have every word of `q`. `kind` is `watched page`, `snippet` the last change (else the address), `date` when it last changed, `url` `/watches/{id}`, `link` the watched address. Bangs: `!lookout`, `!watch` |
+| `GET /pocket/day/{YYYY-MM-DD}?tz=` | `pocket:day` | The changes that counted that day, one item each: `title` the watch, `sub` what changed, `time`, `kind` `changed`, `url` `/changes/{id}`; `summary` like "4 changes on 2 pages". Without `tz` the day is the box's own, as `GET /day/{date}` |
+| `GET /pocket/widget` | `pocket:widget` | `line` like "2 new changes on 1 page, 1 page can't be read" (empty when nothing is new), `metrics` Watching / New changes / Failing, and up to 8 pages with their latest change, new ones first. It never checks a page |
+| `POST /pocket/capture` | `pocket:capture` | `{"request_id", "kind": "watch", "text": "https://…", "title": "…"}` starts watching the first web address in the line, with the person's defaults (as `POST /watches` with only `url`); `title` names it, other words of the line become its notes. A line without an `http://` or `https://` address answers `400`. The same `request_id` again answers the same watch and adds nothing. The page is read right away, like any new watch. Sent by another app through a link, the watch carries that app as its `source`, as with `watches:write` |
 
 Events on the Core bus: `lookout.changed` (`watch_id`, `change_id`, `title`, `url`, `tags`, `summary`, `added`, `removed`, `added_lines`, `removed_lines`, `reason`, `link`), `lookout.failing` (`watch_id`, `title`, `url`, `error`, `failed_checks`), `lookout.watch_added`. Pocket Flows can start a flow on any of them.
